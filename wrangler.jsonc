@@ -8,5 +8,7 @@
 //   directory = "../../frontend-dist"
 //   not_found_handling = "single-page-application"
 {
+  // Pages 校验要求顶层必须声明项目名（即 Pages 项目名）
+  "name": "cloudflare-imgbed",
   "pages_build_output_dir": "frontend-dist"
 }
