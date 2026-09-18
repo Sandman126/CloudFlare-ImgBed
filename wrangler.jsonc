@@ -1,0 +1,12 @@
+// Cloudflare Pages 构建配置
+// 背景：上游 v2.x 起把前端预构建产物从仓库根目录移到了 frontend-dist/，
+// 而 Cloudflare Pages 默认以仓库根目录作为静态资源目录，导致部署后所有
+// 静态资源（/index.html、/js/*、/css/*）返回 404，站点打不开。
+// 这里显式声明静态资源目录，Pages 会读取本文件并据此发布资源。
+// 参考上游自带配置：deploy/worker/wrangler.toml 中的
+//   [assets]
+//   directory = "../../frontend-dist"
+//   not_found_handling = "single-page-application"
+{
+  "pages_build_output_dir": "frontend-dist"
+}
