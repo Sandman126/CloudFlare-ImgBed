@@ -1,14 +1,40 @@
 // Cloudflare Pages 构建配置
+//
 // 背景：上游 v2.x 起把前端预构建产物从仓库根目录移到了 frontend-dist/，
 // 而 Cloudflare Pages 默认以仓库根目录作为静态资源目录，导致部署后所有
-// 静态资源（/index.html、/js/*、/css/*）返回 404，站点打不开。
-// 这里显式声明静态资源目录，Pages 会读取本文件并据此发布资源。
+// 静态资源（/、/index.html、/js/*、/css/*）返回 404，站点打不开。
 // 参考上游自带配置：deploy/worker/wrangler.toml 中的
 //   [assets]
 //   directory = "../../frontend-dist"
-//   not_found_handling = "single-page-application"
+//
+// ⚠️ 重要：wrangler 配置文件一旦存在，就会成为该 Pages 项目配置的唯一来源，
+// 控制台里配置的绑定会被忽略。因此下面的 KV / D1 / R2 绑定必须与
+// Cloudflare 控制台保持一致，缺失任意一项都会导致接口报
+// “数据库未配置 / Database not configured”。
 {
   // Pages 校验要求顶层必须声明项目名（即 Pages 项目名）
   "name": "cloudflare-imgbed",
-  "pages_build_output_dir": "frontend-dist"
+  // 静态资源目录（前端预构建产物所在目录）
+  "pages_build_output_dir": "frontend-dist",
+  "compatibility_date": "2025-10-30",
+  // 存储绑定：与 Cloudflare 控制台中的配置保持一致
+  "kv_namespaces": [
+    {
+      "binding": "img_url",
+      "id": "cc7275e31e34422b9617f1ca4a82515c"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "img_d1",
+      "database_name": "img_d1",
+      "database_id": "d905593b-225f-4e3c-8fc8-db8ba47767f3"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "img_r2",
+      "bucket_name": "imgbed"
+    }
+  ]
 }
